@@ -1,0 +1,3 @@
+{
+  "extends": "@matheussartori/eslint-config-skope-it/node"
+}
