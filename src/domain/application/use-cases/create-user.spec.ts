@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from 'vitest'
 import { CreateUserUseCase } from '@/domain/application/use-cases/create-user'
-import { makeUser } from 'test/factories/make-user'
+import { makeUser } from '@/test/factories/make-user'
 import { ConflictError } from '@/core/errors/application/conflict-error'
 import { InMemoryUserRepository } from '@/test/repositories/in-memory-user-repository'
 import { FakeHashProvider } from '@/test/infra/fake-hash-provider'
