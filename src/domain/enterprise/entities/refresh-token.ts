@@ -6,9 +6,9 @@ export interface RefreshTokenAttributes {
   token: string
   expiredAt: Date
   createdAt?: Date
-  userAgent?: string
-  ipAddress?: string
-  revokedAt?: Date
+  userAgent?: string | null
+  ipAddress?: string | null
+  revokedAt?: Date | null
 }
 
 export class RefreshToken extends Entity<RefreshTokenAttributes> {

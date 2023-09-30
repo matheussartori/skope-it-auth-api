@@ -5,7 +5,7 @@ export interface UserAttributes {
   name: string
   email: string
   password: string
-  emailVerifiedAt?: Date
+  emailVerifiedAt?: Date | null
   createdAt?: Date
   updatedAt?: Date
 }
@@ -21,6 +21,18 @@ export class User extends Entity<UserAttributes> {
 
   get password() {
     return this.attributes.password
+  }
+
+  get createdAt() {
+    return this.attributes.createdAt
+  }
+
+  get updatedAt() {
+    return this.attributes.updatedAt
+  }
+
+  get emailVerifiedAt() {
+    return this.attributes.emailVerifiedAt
   }
 
   static create(attributes: UserAttributes, id?: UniqueEntityID) {
