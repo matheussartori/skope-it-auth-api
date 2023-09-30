@@ -1,4 +1,3 @@
-import { beforeEach, describe, expect, it } from 'vitest'
 import { InMemoryUserRepository } from '@/test/repositories/in-memory-user-repository'
 import { FakeHashProvider } from '@/test/infra/fake-hash-provider'
 import { CreateSessionUseCase } from './create-session'
@@ -6,8 +5,10 @@ import { FakeAccessTokenProvider } from '@/test/infra/fake-access-token-provider
 import { NotFoundError } from '@/core/errors/application/not-found-error'
 import { makeUser } from '@/test/factories/make-user'
 import { FakeRefreshTokenProvider } from '@/test/infra/fake-refresh-token-provider'
+import { InMemoryRefreshTokenRepository } from '@/test/repositories/in-memory-refresh-token-repository'
 
 let inMemoryUserRepository: InMemoryUserRepository
+let inMemoryRefreshTokenRepository: InMemoryRefreshTokenRepository
 let fakeHashProvider: FakeHashProvider
 let fakeAccessTokenProvider: FakeAccessTokenProvider
 let fakeRefreshTokenProvider: FakeRefreshTokenProvider
@@ -16,11 +17,13 @@ let sut: CreateSessionUseCase
 describe('create session use case', () => {
   beforeEach(() => {
     inMemoryUserRepository = new InMemoryUserRepository()
+    inMemoryRefreshTokenRepository = new InMemoryRefreshTokenRepository()
     fakeHashProvider = new FakeHashProvider()
     fakeAccessTokenProvider = new FakeAccessTokenProvider()
     fakeRefreshTokenProvider = new FakeRefreshTokenProvider()
     sut = new CreateSessionUseCase(
       inMemoryUserRepository,
+      inMemoryRefreshTokenRepository,
       fakeHashProvider,
       fakeAccessTokenProvider,
       fakeRefreshTokenProvider,
@@ -48,6 +51,23 @@ describe('create session use case', () => {
 
     expect(result.isLeft()).toBe(true)
     expect(result.value).toBeInstanceOf(NotFoundError)
+  })
+
+  it('should persist the refresh token in the repository', async () => {
+    const createRefreshTokenSpy = vi.spyOn(
+      inMemoryRefreshTokenRepository,
+      'create',
+    )
+
+    const user = makeUser()
+    inMemoryUserRepository.create(user)
+
+    await sut.execute({
+      email: user.email,
+      password: user.password,
+    })
+
+    expect(createRefreshTokenSpy).toHaveBeenCalledOnce()
   })
 
   it('should be able to create a session', async () => {

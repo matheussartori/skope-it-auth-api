@@ -10,7 +10,7 @@ interface CreateUserUseCaseParams {
   password: string
 }
 
-type CreateUserUseCaseResult = Either<ConflictError, object>
+type CreateUserUseCaseResult = Either<ConflictError, null>
 
 export class CreateUserUseCase {
   constructor(
@@ -39,6 +39,6 @@ export class CreateUserUseCase {
 
     await this.userRepository.create(user)
 
-    return right({})
+    return right(null)
   }
 }

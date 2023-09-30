@@ -22,5 +22,8 @@
       "@/*": ["./src/*"],
       "@/test/*": ["./test/*"]
     },
+    "types": [
+      "vitest/globals"
+    ]
   }
 }

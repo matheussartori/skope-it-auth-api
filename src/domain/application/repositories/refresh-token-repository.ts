@@ -1,3 +1,7 @@
+import { RefreshToken } from '@/domain/enterprise/entities/refresh-token'
+
 export interface RefreshTokenRepository {
-  create(userId: string, expiresIn: number): Promise<string>
+  findById(id: string): Promise<RefreshToken | null>
+  create(refreshToken: RefreshToken): Promise<void>
+  delete(id: string): Promise<void>
 }

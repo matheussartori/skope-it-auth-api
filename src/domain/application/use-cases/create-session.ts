@@ -4,6 +4,8 @@ import { HashProvider } from '@/infra/hash-provider'
 import { Either, left, right } from '@/core/either'
 import { AccessTokenProvider } from '@/infra/access-token-provider'
 import { RefreshTokenProvider } from '@/infra/refresh-token-provider'
+import { RefreshTokenRepository } from '../repositories/refresh-token-repository'
+import { RefreshToken } from '@/domain/enterprise/entities/refresh-token'
 
 interface CreateSessionUseCaseParams {
   email: string
@@ -20,6 +22,7 @@ type CreateUserUseCaseResult = Either<
 export class CreateSessionUseCase {
   constructor(
     private userRepository: UserRepository,
+    private refreshTokenRepository: RefreshTokenRepository,
     private hashProvider: HashProvider,
     private accessTokenProvider: AccessTokenProvider,
     private refreshTokenProvider: RefreshTokenProvider,
@@ -48,7 +51,15 @@ export class CreateSessionUseCase {
       user.id.toString(),
     )
 
-    const refreshToken = await this.refreshTokenProvider.generate()
+    const refreshTokenRaw = await this.refreshTokenProvider.generate()
+
+    const refreshToken = RefreshToken.create({
+      userId: user.id,
+      token: refreshTokenRaw,
+      expiredAt: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+    })
+
+    await this.refreshTokenRepository.create(refreshToken)
 
     return right({
       accessToken,
