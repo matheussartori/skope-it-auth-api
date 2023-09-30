@@ -5,7 +5,6 @@ import { AccessTokenProvider } from '@/infra/access-token-provider'
 import { RefreshTokenProvider } from '@/infra/refresh-token-provider'
 import { RefreshTokenRepository } from '../repositories/refresh-token-repository'
 import { RefreshToken } from '@/domain/enterprise/entities/refresh-token'
-import { HashGenerator } from '../cryptography/hash-generator'
 import { HashComparer } from '../cryptography/hash-comparer'
 
 interface CreateSessionUseCaseParams {
