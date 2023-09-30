@@ -1,15 +1,15 @@
 import { InMemoryUserRepository } from '@/test/repositories/in-memory-user-repository'
-import { FakeHashProvider } from '@/test/infra/fake-hash-provider'
 import { CreateSessionUseCase } from './create-session'
 import { FakeAccessTokenProvider } from '@/test/infra/fake-access-token-provider'
 import { NotFoundError } from '@/core/errors/application/not-found-error'
 import { makeUser } from '@/test/factories/make-user'
 import { FakeRefreshTokenProvider } from '@/test/infra/fake-refresh-token-provider'
 import { InMemoryRefreshTokenRepository } from '@/test/repositories/in-memory-refresh-token-repository'
+import { FakeHasher } from '@/test/cryptography/fake-hasher'
 
 let inMemoryUserRepository: InMemoryUserRepository
 let inMemoryRefreshTokenRepository: InMemoryRefreshTokenRepository
-let fakeHashProvider: FakeHashProvider
+let fakeHasher: FakeHasher
 let fakeAccessTokenProvider: FakeAccessTokenProvider
 let fakeRefreshTokenProvider: FakeRefreshTokenProvider
 let sut: CreateSessionUseCase
@@ -18,13 +18,13 @@ describe('create session use case', () => {
   beforeEach(() => {
     inMemoryUserRepository = new InMemoryUserRepository()
     inMemoryRefreshTokenRepository = new InMemoryRefreshTokenRepository()
-    fakeHashProvider = new FakeHashProvider()
+    fakeHasher = new FakeHasher()
     fakeAccessTokenProvider = new FakeAccessTokenProvider()
     fakeRefreshTokenProvider = new FakeRefreshTokenProvider()
     sut = new CreateSessionUseCase(
       inMemoryUserRepository,
       inMemoryRefreshTokenRepository,
-      fakeHashProvider,
+      fakeHasher,
       fakeAccessTokenProvider,
       fakeRefreshTokenProvider,
     )
@@ -59,24 +59,30 @@ describe('create session use case', () => {
       'create',
     )
 
-    const user = makeUser()
+    const user = makeUser({
+      password: await fakeHasher.hash('user-password'),
+    })
+
     inMemoryUserRepository.create(user)
 
     await sut.execute({
       email: user.email,
-      password: user.password,
+      password: 'user-password',
     })
 
     expect(createRefreshTokenSpy).toHaveBeenCalledOnce()
   })
 
   it('should be able to create a session', async () => {
-    const user = makeUser()
+    const user = makeUser({
+      password: await fakeHasher.hash('user-password'),
+    })
+
     inMemoryUserRepository.create(user)
 
     const result = await sut.execute({
       email: user.email,
-      password: user.password,
+      password: 'user-password',
     })
 
     expect(result.isRight()).toBe(true)

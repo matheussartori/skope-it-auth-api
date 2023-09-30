@@ -2,7 +2,7 @@ import { User } from '@/domain/enterprise/entities/user'
 import { UserRepository } from '../repositories/user-repository'
 import { ConflictError } from '@/core/errors/application/conflict-error'
 import { Either, left, right } from '@/core/either'
-import { HashProvider } from '@/infra/hash-provider'
+import { HashGenerator } from '../cryptography/hash-generator'
 
 interface CreateUserUseCaseParams {
   name: string
@@ -15,7 +15,7 @@ type CreateUserUseCaseResult = Either<ConflictError, null>
 export class CreateUserUseCase {
   constructor(
     private userRepository: UserRepository,
-    private hashProvider: HashProvider,
+    private hashGenerator: HashGenerator,
   ) {}
 
   async execute({
@@ -29,7 +29,7 @@ export class CreateUserUseCase {
       return left(new ConflictError())
     }
 
-    const hashedPassword = await this.hashProvider.generate(password)
+    const hashedPassword = await this.hashGenerator.hash(password)
 
     const user = User.create({
       name,

@@ -3,17 +3,17 @@ import { CreateUserUseCase } from '@/domain/application/use-cases/create-user'
 import { makeUser } from '@/test/factories/make-user'
 import { ConflictError } from '@/core/errors/application/conflict-error'
 import { InMemoryUserRepository } from '@/test/repositories/in-memory-user-repository'
-import { FakeHashProvider } from '@/test/infra/fake-hash-provider'
+import { FakeHasher } from '@/test/cryptography/fake-hasher'
 
 let inMemoryUserRepository: InMemoryUserRepository
-let fakeHashProvider: FakeHashProvider
+let fakeHasher: FakeHasher
 let sut: CreateUserUseCase
 
 describe('create user use case', () => {
   beforeEach(() => {
     inMemoryUserRepository = new InMemoryUserRepository()
-    fakeHashProvider = new FakeHashProvider()
-    sut = new CreateUserUseCase(inMemoryUserRepository, fakeHashProvider)
+    fakeHasher = new FakeHasher()
+    sut = new CreateUserUseCase(inMemoryUserRepository, fakeHasher)
   })
 
   it('should not be able to register if the email is already in use', async () => {

@@ -1,11 +1,12 @@
 import { NotFoundError } from '@/core/errors/application/not-found-error'
 import { UserRepository } from '../repositories/user-repository'
-import { HashProvider } from '@/infra/hash-provider'
 import { Either, left, right } from '@/core/either'
 import { AccessTokenProvider } from '@/infra/access-token-provider'
 import { RefreshTokenProvider } from '@/infra/refresh-token-provider'
 import { RefreshTokenRepository } from '../repositories/refresh-token-repository'
 import { RefreshToken } from '@/domain/enterprise/entities/refresh-token'
+import { HashGenerator } from '../cryptography/hash-generator'
+import { HashComparer } from '../cryptography/hash-comparer'
 
 interface CreateSessionUseCaseParams {
   email: string
@@ -23,7 +24,7 @@ export class CreateSessionUseCase {
   constructor(
     private userRepository: UserRepository,
     private refreshTokenRepository: RefreshTokenRepository,
-    private hashProvider: HashProvider,
+    private hashComparer: HashComparer,
     private accessTokenProvider: AccessTokenProvider,
     private refreshTokenProvider: RefreshTokenProvider,
   ) {}
@@ -38,7 +39,7 @@ export class CreateSessionUseCase {
       return left(new NotFoundError())
     }
 
-    const passwordMatched = await this.hashProvider.compare(
+    const passwordMatched = await this.hashComparer.compare(
       password,
       user.password,
     )
