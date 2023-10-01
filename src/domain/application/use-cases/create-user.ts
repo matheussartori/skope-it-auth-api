@@ -3,6 +3,7 @@ import { UserRepository } from '../repositories/user-repository'
 import { ConflictError } from '@/core/errors/application/conflict-error'
 import { Either, left, right } from '@/core/either'
 import { HashGenerator } from '../cryptography/hash-generator'
+import { Injectable } from '@nestjs/common'
 
 interface CreateUserUseCaseParams {
   name: string
@@ -12,6 +13,7 @@ interface CreateUserUseCaseParams {
 
 type CreateUserUseCaseResult = Either<ConflictError, null>
 
+@Injectable()
 export class CreateUserUseCase {
   constructor(
     private userRepository: UserRepository,

@@ -2,7 +2,9 @@ import { RefreshTokenRepository } from '@/domain/application/repositories/refres
 import { RefreshToken } from '@/domain/enterprise/entities/refresh-token'
 import { PrismaService } from '../prisma.service'
 import { PrismaRefreshTokenMapper } from '../mappers/prisma-refresh-token-mapper'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class PrismaRefreshTokenRepository implements RefreshTokenRepository {
   constructor(private prisma: PrismaService) {}
 
