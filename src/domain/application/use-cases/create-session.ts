@@ -6,6 +6,7 @@ import { RefreshToken } from '@/domain/enterprise/entities/refresh-token'
 import { HashComparer } from '../cryptography/hash-comparer'
 import { TokenGenerator } from '../token/token-generator'
 import { Encrypter } from '../cryptography/encrypter'
+import { Injectable } from '@nestjs/common'
 
 interface CreateSessionUseCaseParams {
   email: string
@@ -16,9 +17,11 @@ type CreateUserUseCaseResult = Either<
   NotFoundError,
   {
     accessToken: string
+    refreshToken: string
   }
 >
 
+@Injectable()
 export class CreateSessionUseCase {
   constructor(
     private userRepository: UserRepository,
@@ -63,7 +66,7 @@ export class CreateSessionUseCase {
 
     return right({
       accessToken,
-      refreshToken,
+      refreshToken: refreshTokenRaw,
     })
   }
 }
