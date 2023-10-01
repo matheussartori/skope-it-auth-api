@@ -2,6 +2,7 @@ import { z } from 'zod'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 import { BadRequestException, Body, Controller, Post } from '@nestjs/common'
 import { CreateUserUseCase } from '@/domain/application/use-cases/create-user'
+import { Public } from '@/infra/auth/public'
 
 const createUserBodySchema = z.object({
   name: z.string(),
@@ -14,6 +15,7 @@ const bodyValidationPipe = new ZodValidationPipe(createUserBodySchema)
 type CreateUserBodySchema = z.infer<typeof createUserBodySchema>
 
 @Controller('/users')
+@Public()
 export class CreateUserController {
   constructor(private createUser: CreateUserUseCase) {}
 
