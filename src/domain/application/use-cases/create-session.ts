@@ -1,11 +1,11 @@
 import { NotFoundError } from '@/core/errors/application/not-found-error'
 import { UserRepository } from '../repositories/user-repository'
 import { Either, left, right } from '@/core/either'
-import { AccessTokenProvider } from '@/infra/access-token-provider'
-import { RefreshTokenProvider } from '@/infra/refresh-token-provider'
 import { RefreshTokenRepository } from '../repositories/refresh-token-repository'
 import { RefreshToken } from '@/domain/enterprise/entities/refresh-token'
 import { HashComparer } from '../cryptography/hash-comparer'
+import { TokenGenerator } from '../token/token-generator'
+import { Encrypter } from '../cryptography/encrypter'
 
 interface CreateSessionUseCaseParams {
   email: string
@@ -24,8 +24,8 @@ export class CreateSessionUseCase {
     private userRepository: UserRepository,
     private refreshTokenRepository: RefreshTokenRepository,
     private hashComparer: HashComparer,
-    private accessTokenProvider: AccessTokenProvider,
-    private refreshTokenProvider: RefreshTokenProvider,
+    private encrypter: Encrypter,
+    private tokenGenerator: TokenGenerator,
   ) {}
 
   async execute({
@@ -47,11 +47,11 @@ export class CreateSessionUseCase {
       return left(new NotFoundError())
     }
 
-    const accessToken = await this.accessTokenProvider.generate(
-      user.id.toString(),
-    )
+    const accessToken = await this.encrypter.encrypt({
+      sub: user.id.toString(),
+    })
 
-    const refreshTokenRaw = await this.refreshTokenProvider.generate()
+    const refreshTokenRaw = await this.tokenGenerator.create()
 
     const refreshToken = RefreshToken.create({
       userId: user.id,

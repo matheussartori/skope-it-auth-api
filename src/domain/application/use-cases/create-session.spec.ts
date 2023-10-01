@@ -1,17 +1,17 @@
 import { InMemoryUserRepository } from '@/test/repositories/in-memory-user-repository'
 import { CreateSessionUseCase } from './create-session'
-import { FakeAccessTokenProvider } from '@/test/infra/fake-access-token-provider'
 import { NotFoundError } from '@/core/errors/application/not-found-error'
 import { makeUser } from '@/test/factories/make-user'
-import { FakeRefreshTokenProvider } from '@/test/infra/fake-refresh-token-provider'
 import { InMemoryRefreshTokenRepository } from '@/test/repositories/in-memory-refresh-token-repository'
 import { FakeHasher } from '@/test/cryptography/fake-hasher'
+import { FakeEncrypter } from '@/test/cryptography/fake-encrypter'
+import { FakeTokenGenerator } from '@/test/token/fake-token-generator'
 
 let inMemoryUserRepository: InMemoryUserRepository
 let inMemoryRefreshTokenRepository: InMemoryRefreshTokenRepository
 let fakeHasher: FakeHasher
-let fakeAccessTokenProvider: FakeAccessTokenProvider
-let fakeRefreshTokenProvider: FakeRefreshTokenProvider
+let fakeEncrypter: FakeEncrypter
+let fakeTokenGenerator: FakeTokenGenerator
 let sut: CreateSessionUseCase
 
 describe('create session use case', () => {
@@ -19,14 +19,14 @@ describe('create session use case', () => {
     inMemoryUserRepository = new InMemoryUserRepository()
     inMemoryRefreshTokenRepository = new InMemoryRefreshTokenRepository()
     fakeHasher = new FakeHasher()
-    fakeAccessTokenProvider = new FakeAccessTokenProvider()
-    fakeRefreshTokenProvider = new FakeRefreshTokenProvider()
+    fakeEncrypter = new FakeEncrypter()
+    fakeTokenGenerator = new FakeTokenGenerator()
     sut = new CreateSessionUseCase(
       inMemoryUserRepository,
       inMemoryRefreshTokenRepository,
       fakeHasher,
-      fakeAccessTokenProvider,
-      fakeRefreshTokenProvider,
+      fakeEncrypter,
+      fakeTokenGenerator,
     )
   })
 
