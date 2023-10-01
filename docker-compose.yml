@@ -22,7 +22,7 @@ services:
       - database
     depends_on:
       - database
-    command: sh -c "/wait; yarn; pnpx prisma migrate dev; pnpm run start:dev"
+    command: sh -c "/wait; npm ci; npx prisma migrate deploy; npm run start:dev"
     environment:
       - WAIT_HOSTS=database:3306
       - WAIT_TIMEOUT=1000
