@@ -40,6 +40,10 @@ export class RefreshToken extends Entity<RefreshTokenAttributes> {
     return this.attributes.revokedAt
   }
 
+  public isExpired() {
+    return this.expiredAt.getTime() < new Date().getTime()
+  }
+
   static create(attributes: RefreshTokenAttributes, id?: UniqueEntityID) {
     const token = new RefreshToken(
       {

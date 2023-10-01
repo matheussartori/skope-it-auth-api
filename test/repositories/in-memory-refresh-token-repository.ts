@@ -16,13 +16,23 @@ export class InMemoryRefreshTokenRepository implements RefreshTokenRepository {
     return refreshToken
   }
 
-  create(refreshToken: RefreshToken): Promise<void> {
-    this.items.push(refreshToken)
+  async findByToken(token: string): Promise<RefreshToken | null> {
+    const refreshToken = this.items.find(
+      (refreshToken) => refreshToken.token === token,
+    )
 
-    return Promise.resolve()
+    if (refreshToken === undefined) {
+      return null
+    }
+
+    return refreshToken
   }
 
-  async delete(id: string): Promise<void> {
+  async create(refreshToken: RefreshToken): Promise<void> {
+    this.items.push(refreshToken)
+  }
+
+  async revoke(id: string): Promise<void> {
     const updatedItems = this.items.filter(
       (refreshToken) => refreshToken.id.toString() !== id,
     )

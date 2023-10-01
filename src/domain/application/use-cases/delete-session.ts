@@ -28,7 +28,7 @@ export class DeleteSessionUseCase {
       return left(new NotAllowedError())
     }
 
-    await this.refreshTokenRepository.delete(refreshTokenId)
+    await this.refreshTokenRepository.revoke(refreshTokenId)
 
     return right(null)
   }
