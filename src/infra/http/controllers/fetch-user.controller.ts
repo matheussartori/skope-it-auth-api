@@ -1,4 +1,4 @@
-import { Controller, Get } from '@nestjs/common'
+import { Controller, Get, BadRequestException } from '@nestjs/common'
 import { FetchUserUseCase } from '@/domain/application/use-cases/fetch-user'
 import { CurrentUser } from '@/infra/auth/current-user.decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
@@ -9,8 +9,16 @@ export class FetchUserController {
 
   @Get()
   async handle(@CurrentUser() user: UserPayload) {
-    console.log(user)
+    const result = await this.fetchUser.execute({
+      userId: user.sub,
+    })
 
-    return {}
+    if (result.isLeft()) {
+      throw new BadRequestException()
+    }
+
+    return {
+      user: result.value.user,
+    }
   }
 }

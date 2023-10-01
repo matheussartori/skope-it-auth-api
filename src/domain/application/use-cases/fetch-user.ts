@@ -1,22 +1,35 @@
-import { Decrypter } from '../cryptography/decrypter'
+import { ForbiddenError } from '@/core/errors/application/forbidden-error'
 import { UserRepository } from '../repositories/user-repository'
-import { Either } from '@/core/either'
+import { Either, left, right } from '@/core/either'
+import { User } from '@/domain/enterprise/entities/user'
+import { Injectable } from '@nestjs/common'
 
 interface FetchUserUseCaseParams {
-  accessToken: string
+  userId: string
 }
 
-type FetchUserUseCaseResult = Either<null, null>
+type FetchUserUseCaseResult = Either<
+  ForbiddenError,
+  {
+    user: User
+  }
+>
 
+@Injectable()
 export class FetchUserUseCase {
-  constructor(
-    private userRepository: UserRepository,
-    private decrypter: Decrypter,
-  ) {}
+  constructor(private userRepository: UserRepository) {}
 
-  async execute({ accessToken }: FetchUserUseCaseParams) {
-    const payload = await this.decrypter.decrypt(accessToken)
+  async execute({
+    userId,
+  }: FetchUserUseCaseParams): Promise<FetchUserUseCaseResult> {
+    const user = await this.userRepository.findById(userId)
 
-    console.log({ payload })
+    if (!user) {
+      return left(new ForbiddenError())
+    }
+
+    return right({
+      user,
+    })
   }
 }

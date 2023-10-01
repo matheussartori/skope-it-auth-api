@@ -4,6 +4,16 @@ import { User } from '@/domain/enterprise/entities/user'
 export class InMemoryUserRepository implements UserRepository {
   public items: User[] = []
 
+  async findById(id: string): Promise<User | null> {
+    const user = this.items.find((user) => user.id.toString() === id)
+
+    if (user === undefined) {
+      return null
+    }
+
+    return user
+  }
+
   async findByEmail(email: string): Promise<User | null> {
     const user = this.items.find((user) => user.email === email)
 
