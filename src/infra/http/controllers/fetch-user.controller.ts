@@ -2,6 +2,7 @@ import { Controller, Get, BadRequestException } from '@nestjs/common'
 import { FetchUserUseCase } from '@/domain/application/use-cases/fetch-user'
 import { CurrentUser } from '@/infra/auth/current-user.decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
+import { UserPresenter } from '../presenters/UserPresenter'
 
 @Controller('/me')
 export class FetchUserController {
@@ -18,7 +19,7 @@ export class FetchUserController {
     }
 
     return {
-      user: result.value.user,
+      user: UserPresenter.toHTTP(result.value.user),
     }
   }
 }
