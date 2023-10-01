@@ -2,6 +2,7 @@ import { Either, left, right } from '@/core/either'
 import { NotAllowedError } from '@/core/errors/application/not-allowed-error'
 import { RefreshTokenRepository } from '../repositories/refresh-token-repository'
 import { NotFoundError } from '@/core/errors/application/not-found-error'
+import { Injectable } from '@nestjs/common'
 
 interface DeleteSessionUseCaseParams {
   refreshTokenId: string
@@ -10,6 +11,7 @@ interface DeleteSessionUseCaseParams {
 
 type DeleteSessionUseCaseResult = Either<NotFoundError | NotAllowedError, null>
 
+@Injectable()
 export class DeleteSessionUseCase {
   constructor(private refreshTokenRepository: RefreshTokenRepository) {}
 

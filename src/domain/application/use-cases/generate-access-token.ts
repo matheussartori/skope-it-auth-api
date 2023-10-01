@@ -3,6 +3,7 @@ import { RefreshTokenRepository } from '../repositories/refresh-token-repository
 import { ForbiddenError } from '@/core/errors/application/forbidden-error'
 import { TokenExpiredError } from './errors/token-expired-error'
 import { Encrypter } from '../cryptography/encrypter'
+import { Injectable } from '@nestjs/common'
 
 interface GenerateAccessTokenUseCaseParams {
   refreshToken: string
@@ -15,6 +16,7 @@ type GenerateAccessTokenUseCaseResult = Either<
   }
 >
 
+@Injectable()
 export class GenerateAccessTokenUseCase {
   constructor(
     private refreshTokenRepository: RefreshTokenRepository,
