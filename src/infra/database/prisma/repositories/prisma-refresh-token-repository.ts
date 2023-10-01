@@ -20,6 +20,20 @@ export class PrismaRefreshTokenRepository implements RefreshTokenRepository {
     return PrismaRefreshTokenMapper.toDomain(refreshToken)
   }
 
+  async findByToken(token: string): Promise<RefreshToken | null> {
+    const refreshToken = await this.prisma.refreshToken.findUnique({
+      where: {
+        token,
+      },
+    })
+
+    if (!refreshToken) {
+      return null
+    }
+
+    return PrismaRefreshTokenMapper.toDomain(refreshToken)
+  }
+
   async create(refreshToken: RefreshToken): Promise<void> {
     const data = PrismaRefreshTokenMapper.toPrisma(refreshToken)
 
@@ -28,7 +42,7 @@ export class PrismaRefreshTokenRepository implements RefreshTokenRepository {
     })
   }
 
-  async delete(id: string): Promise<void> {
+  async revoke(id: string): Promise<void> {
     await this.prisma.refreshToken.delete({
       where: {
         id,
