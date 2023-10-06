@@ -1,7 +1,8 @@
 import { GenerateAccessTokenUseCase } from '@/domain/application/use-cases/generate-access-token'
-import { BadRequestException, Body, Controller, Get } from '@nestjs/common'
+import { BadRequestException, Body, Controller, Post } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
+import { Public } from '@/infra/auth/public'
 
 const generateAccessTokenBodySchema = z.object({
   refreshToken: z.string(),
@@ -14,10 +15,11 @@ type GenerateAccessTokenBodySchema = z.infer<
 >
 
 @Controller('/access_token')
+@Public()
 export class GenerateAccessTokenController {
   constructor(private generateAccessToken: GenerateAccessTokenUseCase) {}
 
-  @Get()
+  @Post()
   async handle(@Body(bodyValidationPipe) body: GenerateAccessTokenBodySchema) {
     const { refreshToken } = body
 

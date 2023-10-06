@@ -1,5 +1,6 @@
 @baseUrl = http://localhost:3333
 @authToken = {{authenticate.response.body.accessToken}}
+@refreshToken = {{authenticate.response.body.refreshToken}}
 
 # @name create_account
 POST {{baseUrl}}/users
@@ -37,5 +38,15 @@ POST {{baseUrl}}/access_token
 Content-Type: application/json
 
 {
-  "refreshToken": "d0b68bb2-44ea-42ba-a70f-3174bdca88f1",
+  "refreshToken": {{refreshToken}}
+}
+
+###
+
+# @name delete_session
+DELETE {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "refreshToken": {{refreshToken}}
 }
