@@ -1,0 +1,41 @@
+@baseUrl = http://localhost:3333
+@authToken = {{authenticate.response.body.accessToken}}
+
+# @name create_account
+POST {{baseUrl}}/users
+Content-Type: application/json
+
+{
+  "name": "Matheus Sartori",
+  "email": "ms.sartori@outlook.com.br",
+  "password": "123456"
+}
+
+###
+
+# @name authenticate
+POST {{baseUrl}}/sessions
+Content-Type: application/json
+
+{
+  "email": "ms.sartori@outlook.com.br",
+  "password": "123456"
+}
+
+###
+
+# @name fetch_user
+
+GET {{baseUrl}}/me
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
+# @name generate_access_token
+POST {{baseUrl}}/access_token
+Content-Type: application/json
+
+{
+  "refreshToken": "d0b68bb2-44ea-42ba-a70f-3174bdca88f1",
+}
