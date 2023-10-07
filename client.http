@@ -38,7 +38,7 @@ POST {{baseUrl}}/access_token
 Content-Type: application/json
 
 {
-  "refreshToken": {{refreshToken}}
+  "refreshToken": "{{refreshToken}}"
 }
 
 ###
@@ -48,6 +48,6 @@ DELETE {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-  "refreshTokenId": "89e587d0-fcfb-448a-9295-0ff67fa7dd30",
+  "refreshTokenId": "2ddb2a94-e433-4548-9478-41b6f30f77f3",
   "userId": "a53eb198-fc92-4ecd-bd77-26fe63ac86ae"
 }
