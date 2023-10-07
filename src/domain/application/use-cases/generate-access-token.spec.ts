@@ -43,6 +43,21 @@ describe('generate access token use case', () => {
     expect(result.value).toBeInstanceOf(TokenExpiredError)
   })
 
+  it('should not be able to generate an access token if the refresh token is revoked', async () => {
+    const refreshToken = makeRefreshToken({
+      revokedAt: new Date(Date.now() - 1000),
+    })
+
+    await inMemoryRefreshTokenRepository.create(refreshToken)
+
+    const result = await sut.execute({
+      refreshToken: refreshToken.token,
+    })
+
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toBeInstanceOf(TokenExpiredError)
+  })
+
   it('should be able to generate a refresh token', async () => {
     const refreshToken = makeRefreshToken()
 

@@ -37,6 +37,10 @@ export class GenerateAccessTokenUseCase {
       return left(new TokenExpiredError())
     }
 
+    if (refreshTokenExists.isRevoked()) {
+      return left(new TokenExpiredError())
+    }
+
     const accessToken = await this.encrypter.encrypt({
       sub: refreshTokenExists.userId,
     })
