@@ -9,8 +9,10 @@ export class PrismaRefreshTokenMapper {
         token: raw.token,
         userId: new UniqueEntityID(raw.userId),
         expiredAt: raw.expiredAt,
-        userAgent: raw.userAgent,
         ipAddress: raw.ipAddress,
+        userAgent: raw.userAgent,
+        revokedAt: raw.revokedAt,
+        createdAt: raw.createdAt ?? undefined,
       },
       new UniqueEntityID(raw.id),
     )
