@@ -18,6 +18,8 @@
     "test:e2e": "vitest run --config ./vitest.config.e2e.ts",
     "docker:up": "docker compose up -d",
     "docker:logs": "docker compose logs -f",
+    "docker:down": "docker compose down --rmi 'all' --volumes",
+    "docker:rebuild": "npm run docker:down; npm run docker:up",
     "prepare": "husky install"
   },
   "dependencies": {

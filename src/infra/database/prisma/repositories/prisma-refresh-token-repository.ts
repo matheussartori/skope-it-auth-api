@@ -45,9 +45,12 @@ export class PrismaRefreshTokenRepository implements RefreshTokenRepository {
   }
 
   async revoke(id: string): Promise<void> {
-    await this.prisma.refreshToken.delete({
+    await this.prisma.refreshToken.update({
       where: {
         id,
+      },
+      data: {
+        revokedAt: new Date(),
       },
     })
   }

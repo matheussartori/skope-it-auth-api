@@ -33,9 +33,16 @@ export class InMemoryRefreshTokenRepository implements RefreshTokenRepository {
   }
 
   async revoke(id: string): Promise<void> {
-    const updatedItems = this.items.filter(
-      (refreshToken) => refreshToken.id.toString() !== id,
-    )
+    const updatedItems = this.items.map((refreshToken) => {
+      if (refreshToken.id.toString() === id) {
+        return {
+          ...refreshToken,
+          revokedAt: new Date(),
+        } as RefreshToken
+      }
+
+      return refreshToken
+    })
 
     this.items = updatedItems
   }
