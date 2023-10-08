@@ -48,6 +48,6 @@ DELETE {{baseUrl}}/sessions
 Content-Type: application/json
 
 {
-  "refreshTokenId": "0f5fb59a-fc78-4fe3-83c9-6b5267b0ebb1",
-  "userId": "aea7d5ad-30e9-4c38-95f3-2914084272cf"
+  "refreshTokenId": "49b4eafd-38b1-49dd-bb7c-66cfe2cdf5ba",
+  "userId": "24d4204e-c8c0-4122-8e9b-206278d01a56"
 }

@@ -1,5 +1,6 @@
 import { Entity } from '@/core/entities/entity'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
+import { HashGenerator } from '@/domain/application/cryptography/hash-generator'
 
 export interface UserAttributes {
   name: string
@@ -21,6 +22,16 @@ export class User extends Entity<UserAttributes> {
 
   get password() {
     return this.attributes.password
+  }
+
+  async updatePassword(password: string, hashGenerator: HashGenerator) {
+    if (/^(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=]).{8,}$/.test(password)) {
+      this.attributes.password = await hashGenerator.hash(password)
+    } else {
+      throw new Error(
+        'Password must be at least 8 characters long, contain at least one uppercase letter, one lowercase letter, and one special character.',
+      )
+    }
   }
 
   get createdAt() {
