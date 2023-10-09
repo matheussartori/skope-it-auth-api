@@ -42,8 +42,6 @@ beforeAll(async () => {
 
   process.env.DATABASE_URL = databaseURL
 
-  console.log(process.env.DATABASE_URL)
-
   execSync('npx prisma migrate deploy')
 })
 
