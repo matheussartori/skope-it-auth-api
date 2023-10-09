@@ -1,4 +1,10 @@
-import { BadRequestException, Body, Controller, Patch } from '@nestjs/common'
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  HttpCode,
+  Patch,
+} from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 import { UpdatePasswordUseCase } from '@/domain/application/use-cases/update-password'
@@ -19,6 +25,7 @@ export class UpdatePasswordController {
   constructor(private updatePassword: UpdatePasswordUseCase) {}
 
   @Patch()
+  @HttpCode(204)
   async handle(
     @CurrentUser() user: UserPayload,
     @Body(bodyValidationPipe) body: UpdatePasswordBodySchema,
