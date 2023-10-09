@@ -59,6 +59,7 @@ Authorization: Bearer {{authToken}}
 # @name delete_session
 DELETE {{baseUrl}}/sessions
 Content-Type: application/json
+Authorization: Bearer {{authToken}}
 
 {
   "refreshTokenId": "49b4eafd-38b1-49dd-bb7c-66cfe2cdf5ba",
