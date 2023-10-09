@@ -5,12 +5,12 @@ import { AppModule } from '@/infra/app.module'
 import request from 'supertest'
 import { makeUser } from '@/test/factories/make-user'
 import { PrismaUserMapper } from '@/infra/database/prisma/mappers/prisma-user-mapper'
-import { Encrypter } from '@/domain/application/cryptography/encrypter'
+import { makeRefreshToken } from '@/test/factories/make-refresh-token'
+import { PrismaRefreshTokenMapper } from '@/infra/database/prisma/mappers/prisma-refresh-token-mapper'
 
-describe('fetch user controller', () => {
+describe('generate access token controller', () => {
   let app: INestApplication
   let prisma: PrismaService
-  let encrypter: Encrypter
 
   beforeAll(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -20,12 +20,11 @@ describe('fetch user controller', () => {
     app = moduleRef.createNestApplication()
 
     prisma = moduleRef.get(PrismaService)
-    encrypter = moduleRef.get(Encrypter)
 
     await app.init()
   })
 
-  test('[GET] /me', async () => {
+  test('[POST] /access_token', async () => {
     const user = makeUser()
 
     const prismaUser = PrismaUserMapper.toPrisma(user)
@@ -34,15 +33,21 @@ describe('fetch user controller', () => {
       data: prismaUser,
     })
 
-    const accessToken = await encrypter.encrypt({
-      sub: user.id.toString(),
+    const refreshToken = makeRefreshToken()
+
+    const prismaRefreshToken = PrismaRefreshTokenMapper.toPrisma(refreshToken)
+
+    await prisma.refreshToken.create({
+      data: prismaRefreshToken,
     })
 
     const response = await request(app.getHttpServer())
-      .get('/me')
-      .set('Authorization', `Bearer ${accessToken}`)
+      .post('/access_token')
+      .send({
+        refreshToken: refreshToken.token,
+      })
 
-    expect(response.status).toBe(200)
-    expect(response.body.user.id).toBeTruthy()
+    expect(response.status).toBe(201)
+    expect(response.body.accessToken).toBeTruthy()
   })
 })
