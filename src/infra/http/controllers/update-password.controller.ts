@@ -1,7 +1,6 @@
 import { BadRequestException, Body, Controller, Patch } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
-import { Public } from '@/infra/auth/public'
 import { UpdatePasswordUseCase } from '@/domain/application/use-cases/update-password'
 import { CurrentUser } from '@/infra/auth/current-user.decorator'
 import { UserPayload } from '@/infra/auth/jwt.strategy'
@@ -16,7 +15,6 @@ const bodyValidationPipe = new ZodValidationPipe(updatePasswordBodySchema)
 type UpdatePasswordBodySchema = z.infer<typeof updatePasswordBodySchema>
 
 @Controller('/users/password')
-@Public()
 export class UpdatePasswordController {
   constructor(private updatePassword: UpdatePasswordUseCase) {}
 

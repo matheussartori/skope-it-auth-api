@@ -43,6 +43,19 @@ Content-Type: application/json
 
 ###
 
+# @name update_password
+
+PATCH {{baseUrl}}/users/password
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "oldPassword": "123456",
+  "newPassword": "NewSafePassword@123"
+}
+
+###
+
 # @name delete_session
 DELETE {{baseUrl}}/sessions
 Content-Type: application/json
