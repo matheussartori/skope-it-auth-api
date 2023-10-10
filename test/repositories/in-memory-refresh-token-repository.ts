@@ -28,6 +28,14 @@ export class InMemoryRefreshTokenRepository implements RefreshTokenRepository {
     return refreshToken
   }
 
+  async findAllByUserId(userId: string): Promise<RefreshToken[]> {
+    const refreshTokens = this.items.filter(
+      (refreshToken) => refreshToken.userId.toString() === userId,
+    )
+
+    return refreshTokens
+  }
+
   async create(refreshToken: RefreshToken): Promise<void> {
     this.items.push(refreshToken)
   }

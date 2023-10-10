@@ -36,6 +36,16 @@ export class PrismaRefreshTokenRepository implements RefreshTokenRepository {
     return PrismaRefreshTokenMapper.toDomain(refreshToken)
   }
 
+  async findAllByUserId(userId: string): Promise<RefreshToken[]> {
+    const refreshTokens = await this.prisma.refreshToken.findMany({
+      where: {
+        userId,
+      },
+    })
+
+    return refreshTokens.map(PrismaRefreshTokenMapper.toDomain)
+  }
+
   async create(refreshToken: RefreshToken): Promise<void> {
     const data = PrismaRefreshTokenMapper.toPrisma(refreshToken)
 
