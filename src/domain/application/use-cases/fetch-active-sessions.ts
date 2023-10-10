@@ -3,11 +3,11 @@ import { RefreshTokenRepository } from '../repositories/refresh-token-repository
 import { Either, right } from '@/core/either'
 import { RefreshToken } from '@/domain/enterprise/entities/refresh-token'
 
-interface FetchSessionsUseCaseParams {
+interface FetchActiveSessionsUseCaseParams {
   userId: string
 }
 
-type FetchSessionsUseCaseResult = Either<
+type FetchActiveSessionsUseCaseResult = Either<
   null,
   {
     refreshTokens: RefreshToken[]
@@ -15,12 +15,12 @@ type FetchSessionsUseCaseResult = Either<
 >
 
 @Injectable()
-export class FetchSessionsUseCase {
+export class FetchActiveSessionsUseCase {
   constructor(private refreshTokenRepository: RefreshTokenRepository) {}
 
   async execute({
     userId,
-  }: FetchSessionsUseCaseParams): Promise<FetchSessionsUseCaseResult> {
+  }: FetchActiveSessionsUseCaseParams): Promise<FetchActiveSessionsUseCaseResult> {
     const refreshTokens =
       await this.refreshTokenRepository.findAllByUserId(userId)
 

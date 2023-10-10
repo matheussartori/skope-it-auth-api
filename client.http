@@ -56,6 +56,14 @@ Authorization: Bearer {{authToken}}
 
 ###
 
+# @name fetch_active_sessions
+
+GET {{baseUrl}}/sessions
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+###
+
 # @name delete_session
 DELETE {{baseUrl}}/sessions
 Content-Type: application/json

@@ -14,6 +14,8 @@ import { DeleteSessionController } from './controllers/delete-session.controller
 import { DeleteSessionUseCase } from '@/domain/application/use-cases/delete-session'
 import { UpdatePasswordUseCase } from '@/domain/application/use-cases/update-password'
 import { UpdatePasswordController } from './controllers/update-password.controller'
+import { FetchActiveSessionsUseCase } from '@/domain/application/use-cases/fetch-active-sessions'
+import { FetchActiveSessionsController } from './controllers/fetch-active-sessions.controller'
 
 @Module({
   imports: [DatabaseModule, CryptographyModule, TokenModule],
@@ -24,6 +26,7 @@ import { UpdatePasswordController } from './controllers/update-password.controll
     GenerateAccessTokenController,
     DeleteSessionController,
     UpdatePasswordController,
+    FetchActiveSessionsController,
   ],
   providers: [
     CreateUserUseCase,
@@ -32,6 +35,7 @@ import { UpdatePasswordController } from './controllers/update-password.controll
     GenerateAccessTokenUseCase,
     DeleteSessionUseCase,
     UpdatePasswordUseCase,
+    FetchActiveSessionsUseCase,
   ],
 })
 export class HttpModule {}

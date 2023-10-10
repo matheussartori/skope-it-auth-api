@@ -5,11 +5,11 @@ import { AppModule } from '@/infra/app.module'
 import request from 'supertest'
 import { makeUser } from '@/test/factories/make-user'
 import { PrismaUserMapper } from '@/infra/database/prisma/mappers/prisma-user-mapper'
+import { Encrypter } from '@/domain/application/cryptography/encrypter'
 import { makeRefreshToken } from '@/test/factories/make-refresh-token'
 import { PrismaRefreshTokenMapper } from '@/infra/database/prisma/mappers/prisma-refresh-token-mapper'
-import { Encrypter } from '@/domain/application/cryptography/encrypter'
 
-describe('delete session controller', () => {
+describe('fetch active sessions controller', () => {
   let app: INestApplication
   let prisma: PrismaService
   let encrypter: Encrypter
@@ -27,7 +27,7 @@ describe('delete session controller', () => {
     await app.init()
   })
 
-  test('[DELETE] /sessions', async () => {
+  test('[GET] /sessions', async () => {
     const user = makeUser()
 
     const prismaUser = PrismaUserMapper.toPrisma(user)
@@ -51,12 +51,10 @@ describe('delete session controller', () => {
     })
 
     const response = await request(app.getHttpServer())
-      .delete('/sessions')
+      .get('/sessions')
       .set('Authorization', `Bearer ${accessToken}`)
-      .send({
-        refreshTokenId: refreshToken.id.toString(),
-      })
 
-    expect(response.status).toBe(204)
+    expect(response.status).toBe(200)
+    expect(response.body.activeSessions).toHaveLength(1)
   })
 })
